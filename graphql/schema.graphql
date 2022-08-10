@@ -1,0 +1,22 @@
+input DogInput {
+    name: String!
+    breed: String!
+    birthday: String!
+}
+
+type DogInfo {
+    name: String!
+    breed: String!
+    birthday: String!
+    age: Int!
+}
+
+type Query {
+    dog(name: String!): DogInfo
+}
+
+type Mutation {
+    addDog(dogInput: DogInput!): Boolean
+    updateDog(dogInput: DogInput!): Boolean
+    deleteDog(name: String!): Boolean
+}

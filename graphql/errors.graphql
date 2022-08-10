@@ -1,0 +1,7 @@
+enum ErrorType {
+    InternalServerError
+    NotFound
+    BadRequest
+    Forbidden
+    Conflict
+}
