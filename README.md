@@ -1,0 +1,1 @@
+# graphql-error-codes-example
