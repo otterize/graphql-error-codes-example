@@ -1,0 +1,5 @@
+schema:
+  - '../../../graphql/schema.graphql'
+operations:
+  - genqlient.graphql
+generated: generated.go

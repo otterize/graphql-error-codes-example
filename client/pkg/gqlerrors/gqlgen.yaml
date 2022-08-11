@@ -1,0 +1,6 @@
+schema:
+  - '../../../graphql/errors.graphql'
+
+model:
+  filename: models_gen.go
+  package: gqlerrors

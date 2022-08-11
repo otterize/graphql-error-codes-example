@@ -12,7 +12,7 @@ import (
 )
 
 // AddDog is the resolver for the addDog field.
-func (r *mutationResolver) AddDog(_ context.Context, dogInput model.DogInput) (*bool, error) {
+func (r *mutationResolver) AddDog(ctx context.Context, dogInput model.DogInput) (*bool, error) {
 	if dogInput.Breed == "" {
 		return nil, typederrors.BadRequest("dog breed cannot be empty")
 	}
@@ -24,7 +24,7 @@ func (r *mutationResolver) AddDog(_ context.Context, dogInput model.DogInput) (*
 }
 
 // UpdateDog is the resolver for the updateDog field.
-func (r *mutationResolver) UpdateDog(_ context.Context, dogInput model.DogInput) (*bool, error) {
+func (r *mutationResolver) UpdateDog(ctx context.Context, dogInput model.DogInput) (*bool, error) {
 	if _, ok := dogsDB[dogInput.Name]; !ok {
 		return nil, typederrors.NotFound("Dog %s not found", dogInput.Name)
 	}
@@ -36,7 +36,7 @@ func (r *mutationResolver) UpdateDog(_ context.Context, dogInput model.DogInput)
 }
 
 // DeleteDog is the resolver for the deleteDog field.
-func (r *mutationResolver) DeleteDog(_ context.Context, name string) (*bool, error) {
+func (r *mutationResolver) DeleteDog(ctx context.Context, name string) (*bool, error) {
 	if strings.ToLower(name) == "tobi" {
 		return nil, typederrors.ForbiddenError("No one can delete tobi")
 	}
@@ -49,7 +49,10 @@ func (r *mutationResolver) DeleteDog(_ context.Context, name string) (*bool, err
 }
 
 // Dog is the resolver for the dog field.
-func (r *queryResolver) Dog(_ context.Context, name string) (*model.DogInfo, error) {
+func (r *queryResolver) Dog(ctx context.Context, name string, password string) (*model.DogInfo, error) {
+	if password != readPassword {
+		return nil, typederrors.ForbiddenError("Wrong password")
+	}
 	if _, ok := dogsDB[name]; !ok {
 		return nil, typederrors.NotFound("Dog %s not found", name)
 	}

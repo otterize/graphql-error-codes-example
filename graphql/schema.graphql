@@ -12,7 +12,7 @@ type DogInfo {
 }
 
 type Query {
-    dog(name: String!): DogInfo
+    dog(name: String!, password: String!): DogInfo!
 }
 
 type Mutation {

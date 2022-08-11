@@ -1,0 +1,24 @@
+fragment AllDogInfo on DogInfo {
+    name
+    breed
+    birthday
+    age
+}
+
+query getDog($name: String!, $password: String!) {
+    dog(name: $name, password: $password) {
+        ...AllDogInfo
+    }
+}
+
+mutation addDog($dogInput: DogInput!) {
+    addDog(dogInput: $dogInput)
+}
+
+mutation updateDog($dogInput: DogInput!) {
+    updateDog(dogInput: $dogInput)
+}
+
+mutation deleteDog($name: String!) {
+    deleteDog(name: $name)
+}

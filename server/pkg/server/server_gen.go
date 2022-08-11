@@ -10,6 +10,7 @@ import (
 	"server/pkg/model"
 	"strconv"
 	"sync"
+	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -57,7 +58,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Dog func(childComplexity int, name string) int
+		Dog func(childComplexity int, name string, password string) int
 	}
 }
 
@@ -67,7 +68,7 @@ type MutationResolver interface {
 	DeleteDog(ctx context.Context, name string) (*bool, error)
 }
 type QueryResolver interface {
-	Dog(ctx context.Context, name string) (*model.DogInfo, error)
+	Dog(ctx context.Context, name string, password string) (*model.DogInfo, error)
 }
 
 type executableSchema struct {
@@ -159,7 +160,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Dog(childComplexity, args["name"].(string)), true
+		return e.complexity.Query.Dog(childComplexity, args["name"].(string), args["password"].(string)), true
 
 	}
 	return 0, false
@@ -252,7 +253,7 @@ type DogInfo {
 }
 
 type Query {
-    dog(name: String!): DogInfo
+    dog(name: String!, password: String!): DogInfo!
 }
 
 type Mutation {
@@ -339,6 +340,15 @@ func (ec *executionContext) field_Query_dog_args(ctx context.Context, rawArgs ma
 		}
 	}
 	args["name"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["password"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["password"] = arg1
 	return args, nil
 }
 
@@ -726,18 +736,21 @@ func (ec *executionContext) _Query_dog(ctx context.Context, field graphql.Collec
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Dog(rctx, fc.Args["name"].(string))
+		return ec.resolvers.Query().Dog(rctx, fc.Args["name"].(string), fc.Args["password"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.DogInfo)
 	fc.Result = res
-	return ec.marshalODogInfo2ᚖserverᚋpkgᚋmodelᚐDogInfo(ctx, field.Selections, res)
+	return ec.marshalNDogInfo2ᚖserverᚋpkgᚋmodelᚐDogInfo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_dog(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2854,6 +2867,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_dog(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -3220,6 +3236,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNDogInfo2serverᚋpkgᚋmodelᚐDogInfo(ctx context.Context, sel ast.SelectionSet, v model.DogInfo) graphql.Marshaler {
+	return ec._DogInfo(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDogInfo2ᚖserverᚋpkgᚋmodelᚐDogInfo(ctx context.Context, sel ast.SelectionSet, v *model.DogInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._DogInfo(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNDogInput2serverᚋpkgᚋmodelᚐDogInput(ctx context.Context, v interface{}) (model.DogInput, error) {
 	res, err := ec.unmarshalInputDogInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3532,13 +3562,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) marshalODogInfo2ᚖserverᚋpkgᚋmodelᚐDogInfo(ctx context.Context, sel ast.SelectionSet, v *model.DogInfo) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DogInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
