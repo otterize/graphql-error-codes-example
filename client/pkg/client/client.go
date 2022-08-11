@@ -27,13 +27,3 @@ func (c *Client) AddDog(ctx context.Context, dogInput DogInput) error {
 	_, err := addDog(ctx, c.gqlClient, dogInput)
 	return err
 }
-
-func (c *Client) UpdateDog(ctx context.Context, dogInput DogInput) error {
-	_, err := updateDog(ctx, c.gqlClient, dogInput)
-	return err
-}
-
-func (c *Client) DeleteDog(ctx context.Context, name string) error {
-	_, err := deleteDog(ctx, c.gqlClient, name)
-	return err
-}

@@ -14,11 +14,3 @@ query getDog($name: String!, $password: String!) {
 mutation addDog($dogInput: DogInput!) {
     addDog(dogInput: $dogInput)
 }
-
-mutation updateDog($dogInput: DogInput!) {
-    updateDog(dogInput: $dogInput)
-}
-
-mutation deleteDog($name: String!) {
-    deleteDog(name: $name)
-}

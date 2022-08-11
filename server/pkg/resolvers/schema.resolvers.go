@@ -8,7 +8,6 @@ import (
 	"server/pkg/model"
 	"server/pkg/server"
 	"server/pkg/typederrors"
-	"strings"
 )
 
 // AddDog is the resolver for the addDog field.
@@ -20,31 +19,6 @@ func (r *mutationResolver) AddDog(ctx context.Context, dogInput model.DogInput) 
 		return nil, typederrors.ConflictError("dog named %s already exists", dogInput.Name)
 	}
 	dogsDB[dogInput.Name] = dogInput
-	return nil, nil
-}
-
-// UpdateDog is the resolver for the updateDog field.
-func (r *mutationResolver) UpdateDog(ctx context.Context, dogInput model.DogInput) (*bool, error) {
-	if _, ok := dogsDB[dogInput.Name]; !ok {
-		return nil, typederrors.NotFound("Dog %s not found", dogInput.Name)
-	}
-	if dogInput.Breed == "" {
-		return nil, typederrors.BadRequest("Dog breed cannot be empty")
-	}
-	dogsDB[dogInput.Name] = dogInput
-	return nil, nil
-}
-
-// DeleteDog is the resolver for the deleteDog field.
-func (r *mutationResolver) DeleteDog(ctx context.Context, name string) (*bool, error) {
-	if strings.ToLower(name) == "tobi" {
-		return nil, typederrors.ForbiddenError("No one can delete tobi")
-	}
-	if _, ok := dogsDB[name]; ok {
-		delete(dogsDB, name)
-	} else {
-		return nil, typederrors.NotFound("Dog %s not found", name)
-	}
 	return nil, nil
 }
 

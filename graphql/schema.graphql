@@ -17,6 +17,4 @@ type Query {
 
 type Mutation {
     addDog(dogInput: DogInput!): Boolean
-    updateDog(dogInput: DogInput!): Boolean
-    deleteDog(name: String!): Boolean
 }

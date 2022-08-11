@@ -52,14 +52,6 @@ type __addDogInput struct {
 // GetDogInput returns __addDogInput.DogInput, and is useful for accessing the field via an interface.
 func (v *__addDogInput) GetDogInput() DogInput { return v.DogInput }
 
-// __deleteDogInput is used internally by genqlient
-type __deleteDogInput struct {
-	Name string `json:"name"`
-}
-
-// GetName returns __deleteDogInput.Name, and is useful for accessing the field via an interface.
-func (v *__deleteDogInput) GetName() string { return v.Name }
-
 // __getDogInput is used internally by genqlient
 type __getDogInput struct {
 	Name     string `json:"name"`
@@ -72,14 +64,6 @@ func (v *__getDogInput) GetName() string { return v.Name }
 // GetPassword returns __getDogInput.Password, and is useful for accessing the field via an interface.
 func (v *__getDogInput) GetPassword() string { return v.Password }
 
-// __updateDogInput is used internally by genqlient
-type __updateDogInput struct {
-	DogInput DogInput `json:"dogInput"`
-}
-
-// GetDogInput returns __updateDogInput.DogInput, and is useful for accessing the field via an interface.
-func (v *__updateDogInput) GetDogInput() DogInput { return v.DogInput }
-
 // addDogResponse is returned by addDog on success.
 type addDogResponse struct {
 	AddDog bool `json:"addDog"`
@@ -87,14 +71,6 @@ type addDogResponse struct {
 
 // GetAddDog returns addDogResponse.AddDog, and is useful for accessing the field via an interface.
 func (v *addDogResponse) GetAddDog() bool { return v.AddDog }
-
-// deleteDogResponse is returned by deleteDog on success.
-type deleteDogResponse struct {
-	DeleteDog bool `json:"deleteDog"`
-}
-
-// GetDeleteDog returns deleteDogResponse.DeleteDog, and is useful for accessing the field via an interface.
-func (v *deleteDogResponse) GetDeleteDog() bool { return v.DeleteDog }
 
 // getDogDogDogInfo includes the requested fields of the GraphQL type DogInfo.
 type getDogDogDogInfo struct {
@@ -174,14 +150,6 @@ type getDogResponse struct {
 // GetDog returns getDogResponse.Dog, and is useful for accessing the field via an interface.
 func (v *getDogResponse) GetDog() getDogDogDogInfo { return v.Dog }
 
-// updateDogResponse is returned by updateDog on success.
-type updateDogResponse struct {
-	UpdateDog bool `json:"updateDog"`
-}
-
-// GetUpdateDog returns updateDogResponse.UpdateDog, and is useful for accessing the field via an interface.
-func (v *updateDogResponse) GetUpdateDog() bool { return v.UpdateDog }
-
 func addDog(
 	ctx context.Context,
 	client graphql.Client,
@@ -201,36 +169,6 @@ mutation addDog ($dogInput: DogInput!) {
 	var err error
 
 	var data addDogResponse
-	resp := &graphql.Response{Data: &data}
-
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
-	)
-
-	return &data, err
-}
-
-func deleteDog(
-	ctx context.Context,
-	client graphql.Client,
-	name string,
-) (*deleteDogResponse, error) {
-	req := &graphql.Request{
-		OpName: "deleteDog",
-		Query: `
-mutation deleteDog ($name: String!) {
-	deleteDog(name: $name)
-}
-`,
-		Variables: &__deleteDogInput{
-			Name: name,
-		},
-	}
-	var err error
-
-	var data deleteDogResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -271,36 +209,6 @@ fragment AllDogInfo on DogInfo {
 	var err error
 
 	var data getDogResponse
-	resp := &graphql.Response{Data: &data}
-
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
-	)
-
-	return &data, err
-}
-
-func updateDog(
-	ctx context.Context,
-	client graphql.Client,
-	dogInput DogInput,
-) (*updateDogResponse, error) {
-	req := &graphql.Request{
-		OpName: "updateDog",
-		Query: `
-mutation updateDog ($dogInput: DogInput!) {
-	updateDog(dogInput: $dogInput)
-}
-`,
-		Variables: &__updateDogInput{
-			DogInput: dogInput,
-		},
-	}
-	var err error
-
-	var data updateDogResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
