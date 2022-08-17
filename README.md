@@ -21,8 +21,8 @@ cd server/cmd
 go run .
 ```
 
-You can work against the server using the GraphQL playground at http://localhost:8080/playground 
-Or by running the client:
+You can work against the server using the GraphQL playground at http://localhost:8080/playground ,
+or by running the client:
 ```shell
 cd client/cmd
 go run .
