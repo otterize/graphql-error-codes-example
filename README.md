@@ -11,7 +11,8 @@ The server exposes a graphql Query called `errorTypesDemo()`, that receives firs
 Each name is validated to be longer than 2 characters, and in case it doesn't, an error with the matching error type is returned.
 
 Assuming the validation passed, an internal error is intentionally thrown in the server, to demonstrate the masking of unexpected errors with "InternalServerError".
-For comparison, try going to the server's `main.go` file and comment out the `srv.SetErrorPresenter(GqlErrorPresenter)` line, to see the leak of the internal error message to the client.
+For comparison, try disabling the error masking by going to the `server/main.go` file and comment out the `srv.SetErrorPresenter(GqlErrorPresenter)` line, and rerun the server. 
+This way you'll see the leak of the internal error message to the client.
 
 ## How to run?
 Run the server:
