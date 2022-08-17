@@ -1,13 +1,18 @@
-package server
+package main
 
 import (
 	"context"
 	"errors"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/sirupsen/logrus"
 	"github.com/vektah/gqlparser/v2/gqlerror"
-	"server/pkg/model"
-	"server/pkg/typederrors"
+	"net/http"
+	"server/model"
+	"server/resolvers"
+	"server/server"
+	"server/typederrors"
 )
 
 type TypedError interface {
@@ -42,4 +47,14 @@ func GqlErrorPresenter(ctx context.Context, err error) *gqlerror.Error {
 	// Log original error and return InternalServerError instead
 	logrus.WithError(err).Error("Custom GraphQL error presenter got an unexpected error")
 	return presentTypedError(ctx, typederrors.InternalServerError("internal server error").(TypedError))
+}
+
+func main() {
+	conf := server.Config{Resolvers: &resolvers.Resolver{}}
+	srv := handler.NewDefaultServer(server.NewExecutableSchema(conf))
+	//srv.SetErrorPresenter(GqlErrorPresenter)
+	http.Handle("/query", srv)
+	http.Handle("/playground", playground.Handler("Playground", "/query"))
+	logrus.Info("Starting server on port http://localhost:8080/query, playground available at http://localhost:8080/playground")
+	logrus.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -8,40 +8,23 @@ import (
 	"strconv"
 )
 
-type DogInfo struct {
-	Name     string `json:"name"`
-	Breed    string `json:"breed"`
-	Birthday string `json:"birthday"`
-	Age      int    `json:"age"`
-}
-
-type DogInput struct {
-	Name     string `json:"name"`
-	Breed    string `json:"breed"`
-	Birthday string `json:"birthday"`
-}
-
 type ErrorType string
 
 const (
 	ErrorTypeInternalServerError ErrorType = "InternalServerError"
-	ErrorTypeNotFound            ErrorType = "NotFound"
-	ErrorTypeBadRequest          ErrorType = "BadRequest"
-	ErrorTypeForbidden           ErrorType = "Forbidden"
-	ErrorTypeConflict            ErrorType = "Conflict"
+	ErrorTypeBadFirstName        ErrorType = "BadFirstName"
+	ErrorTypeBadLastName         ErrorType = "BadLastName"
 )
 
 var AllErrorType = []ErrorType{
 	ErrorTypeInternalServerError,
-	ErrorTypeNotFound,
-	ErrorTypeBadRequest,
-	ErrorTypeForbidden,
-	ErrorTypeConflict,
+	ErrorTypeBadFirstName,
+	ErrorTypeBadLastName,
 }
 
 func (e ErrorType) IsValid() bool {
 	switch e {
-	case ErrorTypeInternalServerError, ErrorTypeNotFound, ErrorTypeBadRequest, ErrorTypeForbidden, ErrorTypeConflict:
+	case ErrorTypeInternalServerError, ErrorTypeBadFirstName, ErrorTypeBadLastName:
 		return true
 	}
 	return false

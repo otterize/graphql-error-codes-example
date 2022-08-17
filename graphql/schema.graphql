@@ -1,20 +1,3 @@
-input DogInput {
-    name: String!
-    breed: String!
-    birthday: String!
-}
-
-type DogInfo {
-    name: String!
-    breed: String!
-    birthday: String!
-    age: Int!
-}
-
 type Query {
-    dog(name: String!, password: String!): DogInfo!
-}
-
-type Mutation {
-    addDog(dogInput: DogInput!): Boolean
+    errorTypesDemo(firstName: String!, lastName: String!): String!
 }

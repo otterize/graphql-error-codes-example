@@ -18,12 +18,7 @@ func NewClient(serverAddress string) *Client {
 	}
 }
 
-func (c *Client) GetDog(ctx context.Context, name string, password string) (AllDogInfo, error) {
-	res, err := getDog(ctx, c.gqlClient, name, password)
-	return res.Dog.AllDogInfo, err
-}
-
-func (c *Client) AddDog(ctx context.Context, dogInput DogInput) error {
-	_, err := addDog(ctx, c.gqlClient, dogInput)
-	return err
+func (c *Client) ErrorTypesDemo(ctx context.Context, firstName string, lastName string) (string, error) {
+	res, err := errorTypesDemo(ctx, c.gqlClient, firstName, lastName)
+	return res.ErrorTypesDemo, err
 }
