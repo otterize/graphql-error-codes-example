@@ -8,11 +8,10 @@ func GetGQLErrorType(err error) ErrorType {
 	if errList, ok := err.(gqlerror.List); ok {
 		gqlerr := &gqlerror.Error{}
 		if errList.As(&gqlerr) && gqlerr.Extensions != nil {
-			errorTypeStr, exists := gqlerr.Extensions["errorType"]
-			if !exists {
-				return ""
+			errorTypeString, isString := gqlerr.Extensions["errorType"].(string)
+			if isString {
+				return ErrorType(errorTypeString)
 			}
-			return ErrorType(errorTypeStr.(string))
 		}
 	}
 	return ""
