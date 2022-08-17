@@ -52,7 +52,7 @@ func GqlErrorPresenter(ctx context.Context, err error) *gqlerror.Error {
 func main() {
 	conf := server.Config{Resolvers: &resolvers.Resolver{}}
 	srv := handler.NewDefaultServer(server.NewExecutableSchema(conf))
-	//srv.SetErrorPresenter(GqlErrorPresenter)
+	srv.SetErrorPresenter(GqlErrorPresenter)
 	http.Handle("/query", srv)
 	http.Handle("/playground", playground.Handler("Playground", "/query"))
 	logrus.Info("Starting server on port http://localhost:8080/query, playground available at http://localhost:8080/playground")
