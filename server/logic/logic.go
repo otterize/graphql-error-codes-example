@@ -3,7 +3,7 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"server/generated/typederrors"
+	"server/typederrors"
 )
 
 func ErrorTypesDemo(firstName string, lastName string) (string, error) {

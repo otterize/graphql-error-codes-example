@@ -12,7 +12,7 @@ import (
 	"server/generated/model"
 	"server/generated/resolvers"
 	"server/generated/server"
-	"server/generated/typederrors"
+	"server/typederrors"
 )
 
 type TypedError interface {
