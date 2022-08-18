@@ -9,10 +9,10 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"net/http"
-	"server/model"
-	"server/resolvers"
-	"server/server"
-	"server/typederrors"
+	"server/generated/model"
+	"server/generated/resolvers"
+	"server/generated/server"
+	"server/generated/typederrors"
 )
 
 type TypedError interface {

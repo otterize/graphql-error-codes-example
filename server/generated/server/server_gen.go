@@ -139,13 +139,13 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../../graphql/errors.graphql", Input: `enum ErrorType {
+	{Name: "../../../graphql/errors.graphql", Input: `enum ErrorType {
     InternalServerError
     BadFirstName
     BadLastName
 }
 `, BuiltIn: false},
-	{Name: "../../graphql/schema.graphql", Input: `type Query {
+	{Name: "../../../graphql/schema.graphql", Input: `type Query {
     errorTypesDemo(firstName: String!, lastName: String!): String!
     errorMaskingDemo: Boolean
 }`, BuiltIn: false},

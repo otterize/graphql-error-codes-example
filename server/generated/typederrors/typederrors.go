@@ -2,7 +2,7 @@ package typederrors
 
 import (
 	"fmt"
-	"server/model"
+	"server/generated/model"
 )
 
 type typedError struct {
