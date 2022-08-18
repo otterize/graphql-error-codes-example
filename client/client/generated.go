@@ -20,6 +20,14 @@ func (v *__errorTypesDemoInput) GetFirstName() string { return v.FirstName }
 // GetLastName returns __errorTypesDemoInput.LastName, and is useful for accessing the field via an interface.
 func (v *__errorTypesDemoInput) GetLastName() string { return v.LastName }
 
+// errorMaskingDemoResponse is returned by errorMaskingDemo on success.
+type errorMaskingDemoResponse struct {
+	ErrorMaskingDemo bool `json:"errorMaskingDemo"`
+}
+
+// GetErrorMaskingDemo returns errorMaskingDemoResponse.ErrorMaskingDemo, and is useful for accessing the field via an interface.
+func (v *errorMaskingDemoResponse) GetErrorMaskingDemo() bool { return v.ErrorMaskingDemo }
+
 // errorTypesDemoResponse is returned by errorTypesDemo on success.
 type errorTypesDemoResponse struct {
 	ErrorTypesDemo string `json:"errorTypesDemo"`
@@ -27,6 +35,32 @@ type errorTypesDemoResponse struct {
 
 // GetErrorTypesDemo returns errorTypesDemoResponse.ErrorTypesDemo, and is useful for accessing the field via an interface.
 func (v *errorTypesDemoResponse) GetErrorTypesDemo() string { return v.ErrorTypesDemo }
+
+func errorMaskingDemo(
+	ctx context.Context,
+	client graphql.Client,
+) (*errorMaskingDemoResponse, error) {
+	req := &graphql.Request{
+		OpName: "errorMaskingDemo",
+		Query: `
+query errorMaskingDemo {
+	errorMaskingDemo
+}
+`,
+	}
+	var err error
+
+	var data errorMaskingDemoResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
 
 func errorTypesDemo(
 	ctx context.Context,

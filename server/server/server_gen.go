@@ -43,12 +43,14 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Query struct {
-		ErrorTypesDemo func(childComplexity int, firstName string, lastName string) int
+		ErrorMaskingDemo func(childComplexity int) int
+		ErrorTypesDemo   func(childComplexity int, firstName string, lastName string) int
 	}
 }
 
 type QueryResolver interface {
 	ErrorTypesDemo(ctx context.Context, firstName string, lastName string) (string, error)
+	ErrorMaskingDemo(ctx context.Context) (*bool, error)
 }
 
 type executableSchema struct {
@@ -65,6 +67,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Query.errorMaskingDemo":
+		if e.complexity.Query.ErrorMaskingDemo == nil {
+			break
+		}
+
+		return e.complexity.Query.ErrorMaskingDemo(childComplexity), true
 
 	case "Query.errorTypesDemo":
 		if e.complexity.Query.ErrorTypesDemo == nil {
@@ -138,6 +147,7 @@ var sources = []*ast.Source{
 `, BuiltIn: false},
 	{Name: "../../graphql/schema.graphql", Input: `type Query {
     errorTypesDemo(firstName: String!, lastName: String!): String!
+    errorMaskingDemo: Boolean
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -274,6 +284,47 @@ func (ec *executionContext) fieldContext_Query_errorTypesDemo(ctx context.Contex
 	if fc.Args, err = ec.field_Query_errorTypesDemo_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_errorMaskingDemo(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_errorMaskingDemo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ErrorMaskingDemo(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_errorMaskingDemo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -2220,6 +2271,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "errorMaskingDemo":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_errorMaskingDemo(ctx, field)
 				return res
 			}
 

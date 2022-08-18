@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"server/server"
 	"server/typederrors"
@@ -18,8 +19,12 @@ func (r *queryResolver) ErrorTypesDemo(ctx context.Context, firstName string, la
 	if len(lastName) < 2 {
 		return "", typederrors.BadLastName("last name is too short")
 	}
-	return "", fmt.Errorf("dear %s %s, this is an internal error from the server. if you see it on the client, "+
-		"it means the server does not mask the messages of internal errors, and may leak sensitive information", firstName, lastName)
+	return fmt.Sprintf("Well done %s %s", firstName, lastName), nil
+}
+
+// ErrorMaskingDemo is the resolver for the errorMaskingDemo field.
+func (r *queryResolver) ErrorMaskingDemo(ctx context.Context) (*bool, error) {
+	return nil, errors.New("if you see this error message on the client, there is an information leak")
 }
 
 // Query returns server.QueryResolver implementation.

@@ -22,3 +22,8 @@ func (c *Client) ErrorTypesDemo(ctx context.Context, firstName string, lastName 
 	res, err := errorTypesDemo(ctx, c.gqlClient, firstName, lastName)
 	return res.ErrorTypesDemo, err
 }
+
+func (c *Client) ErrorMaskingDemo(ctx context.Context) error {
+	_, err := errorMaskingDemo(ctx, c.gqlClient)
+	return err
+}

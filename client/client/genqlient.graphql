@@ -1,3 +1,7 @@
 query errorTypesDemo($firstName: String!, $lastName: String!) {
     errorTypesDemo(firstName: $firstName, lastName: $lastName)
 }
+
+query errorMaskingDemo {
+    errorMaskingDemo
+}
