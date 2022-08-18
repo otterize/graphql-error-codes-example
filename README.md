@@ -17,14 +17,14 @@ This way you'll see the leak of the internal error message to the client.
 ## How to run?
 Run the server:
 ```shell
-cd server/cmd
+cd server
 go run .
 ```
 
 You can work against the server using the GraphQL playground at http://localhost:8080/playground ,
 or by running the client:
 ```shell
-cd client/cmd
+cd client
 go run .
 ```
 
