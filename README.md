@@ -7,7 +7,7 @@ The project demonstrates two features:
 2. Unexpected errors in the server are masked and replaced with "Internal Server Error". This prevents leak of sensitive information inside error messages.
 
 For a further explanation, check out my blog post:
-Who Moved My Error Codes? Adding error types to your GoLang GraphQL Server #TODO: add hyperlink
+[Who Moved My Error Codes? Adding error types to your GoLang GraphQL Server](https://otterize.com/blog/who-moved-my-error-codes)
 
 ## How to use?
 
